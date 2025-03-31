@@ -10,11 +10,13 @@ import (
 )
 
 var (
-	MaxPluginPackageSize = viper.GetInt64("plugin.max_package_size") // 从配置文件中读取，默认值为 50MB
+	MaxPluginPackageSize int64
 )
 
 func init() {
-	viper.SetDefault("plugin.max_package_size", int64(52428800)) // 设置默认值
+	viper.SetDefault("plugin.max_package_size", int64(52428800)) // 先设置默认值
+	MaxPluginPackageSize = viper.GetInt64("plugin.max_package_size") // 然后获取值
+	log.Info("plugin package max size: %s", MaxPluginPackageSize)
 }
 
 func PackagePlugin(inputPath string, outputPath string) {
