@@ -9,8 +9,12 @@ import (
 )
 
 var (
-	MaxPluginPackageSize = int64(52428800*4) // 50MB
+	MaxPluginPackageSize = viper.GetInt64("plugin.max_package_size") // 从配置文件中读取，默认值为 50MB
 )
+
+func init() {
+	viper.SetDefault("plugin.max_package_size", int64(52428800)) // 设置默认值
+}
 
 func PackagePlugin(inputPath string, outputPath string) {
 	decoder, err := decoder.NewFSPluginDecoder(inputPath)
