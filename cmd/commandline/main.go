@@ -67,7 +67,6 @@ func initConfig() {
 
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
-		fmt.Println("max_package_size:", viper.GetInt64("plugin.max_package_size"))
 	}
 }
 

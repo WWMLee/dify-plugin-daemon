@@ -10,14 +10,8 @@ import (
 )
 
 var (
-	MaxPluginPackageSize int64
+	MaxPluginPackageSize = int64(52428800) // 50MB
 )
-
-func init() {
-	viper.SetDefault("plugin.max_package_size", int64(52428800)) // 先设置默认值
-	MaxPluginPackageSize = viper.GetInt64("plugin.max_package_size") // 然后获取值
-	log.Info("plugin package max size: %s", MaxPluginPackageSize)
-}
 
 func PackagePlugin(inputPath string, outputPath string) {
 	decoder, err := decoder.NewFSPluginDecoder(inputPath)
@@ -25,6 +19,12 @@ func PackagePlugin(inputPath string, outputPath string) {
 		log.Error("failed to create plugin decoder , plugin path: %s, error: %v", inputPath, err)
 		os.Exit(1)
 		return
+	}
+
+	var maxPackageSize int64 = viper.GetInt64("plugin.max_package_size")
+	if maxPackageSize > 0 {
+		MaxPluginPackageSize = maxPackageSize
+		log.Info("plugin package max size: %s", MaxPluginPackageSize)
 	}
 
 	packager := packager.NewPackager(decoder)
